@@ -27,6 +27,14 @@ function extractTotal(payload, fallbackLength) {
 }
 
 export default function Users({ apiBaseUrl }) {
+  const codespaceEndpoint = `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/users/`
+  const fallbackEndpoint = 'http://localhost:8000/api/users/'
+  const endpoint = apiBaseUrl
+    ? `${apiBaseUrl}/users/`
+    : import.meta.env.VITE_CODESPACE_NAME
+      ? codespaceEndpoint
+      : fallbackEndpoint
+
   const [users, setUsers] = useState([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -40,7 +48,7 @@ export default function Users({ apiBaseUrl }) {
       setError('')
 
       try {
-        const response = await fetch(`${apiBaseUrl}/users/`)
+        const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
         }
@@ -68,7 +76,7 @@ export default function Users({ apiBaseUrl }) {
     return () => {
       cancelled = true
     }
-  }, [apiBaseUrl])
+  }, [endpoint])
 
   return (
     <section>

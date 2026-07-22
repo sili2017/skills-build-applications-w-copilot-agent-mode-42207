@@ -39,6 +39,14 @@ function formatOwner(user) {
 }
 
 export default function Workouts({ apiBaseUrl }) {
+  const codespaceEndpoint = `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts/`
+  const fallbackEndpoint = 'http://localhost:8000/api/workouts/'
+  const endpoint = apiBaseUrl
+    ? `${apiBaseUrl}/workouts/`
+    : import.meta.env.VITE_CODESPACE_NAME
+      ? codespaceEndpoint
+      : fallbackEndpoint
+
   const [workouts, setWorkouts] = useState([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -52,7 +60,7 @@ export default function Workouts({ apiBaseUrl }) {
       setError('')
 
       try {
-        const response = await fetch(`${apiBaseUrl}/workouts/`)
+        const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
         }
@@ -80,7 +88,7 @@ export default function Workouts({ apiBaseUrl }) {
     return () => {
       cancelled = true
     }
-  }, [apiBaseUrl])
+  }, [endpoint])
 
   return (
     <section>

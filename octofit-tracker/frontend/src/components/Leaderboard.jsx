@@ -47,6 +47,14 @@ function scoreFromEntry(entry) {
 }
 
 export default function Leaderboard({ apiBaseUrl }) {
+  const codespaceEndpoint = `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/leaderboard/`
+  const fallbackEndpoint = 'http://localhost:8000/api/leaderboard/'
+  const endpoint = apiBaseUrl
+    ? `${apiBaseUrl}/leaderboard/`
+    : import.meta.env.VITE_CODESPACE_NAME
+      ? codespaceEndpoint
+      : fallbackEndpoint
+
   const [records, setRecords] = useState([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -60,7 +68,7 @@ export default function Leaderboard({ apiBaseUrl }) {
       setError('')
 
       try {
-        const response = await fetch(`${apiBaseUrl}/leaderboard/`)
+        const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
         }
@@ -88,7 +96,7 @@ export default function Leaderboard({ apiBaseUrl }) {
     return () => {
       cancelled = true
     }
-  }, [apiBaseUrl])
+  }, [endpoint])
 
   return (
     <section>

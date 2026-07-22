@@ -39,6 +39,14 @@ function formatActor(value) {
 }
 
 export default function Activities({ apiBaseUrl }) {
+  const codespaceEndpoint = `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/activities/`
+  const fallbackEndpoint = 'http://localhost:8000/api/activities/'
+  const endpoint = apiBaseUrl
+    ? `${apiBaseUrl}/activities/`
+    : import.meta.env.VITE_CODESPACE_NAME
+      ? codespaceEndpoint
+      : fallbackEndpoint
+
   const [activities, setActivities] = useState([])
   const [total, setTotal] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -52,7 +60,7 @@ export default function Activities({ apiBaseUrl }) {
       setError('')
 
       try {
-        const response = await fetch(`${apiBaseUrl}/activities/`)
+        const response = await fetch(endpoint)
         if (!response.ok) {
           throw new Error(`Request failed with status ${response.status}`)
         }
@@ -80,7 +88,7 @@ export default function Activities({ apiBaseUrl }) {
     return () => {
       cancelled = true
     }
-  }, [apiBaseUrl])
+  }, [endpoint])
 
   return (
     <section>
