@@ -5,6 +5,10 @@ function normalizeList(payload) {
     return payload
   }
 
+  if (payload?.item && typeof payload.item === 'object') {
+    return [payload.item]
+  }
+
   if (Array.isArray(payload?.results)) {
     return payload.results
   }

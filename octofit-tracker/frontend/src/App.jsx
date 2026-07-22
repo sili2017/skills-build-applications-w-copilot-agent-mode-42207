@@ -5,14 +5,26 @@ import Teams from './components/Teams.jsx'
 import Users from './components/Users.jsx'
 import Workouts from './components/Workouts.jsx'
 import logo from '../../../docs/octofitapp-small.png'
-import './App.css'
+
+function deriveCodespaceNameFromHost() {
+  const host = window.location.hostname
+  const marker = '-5173.app.github.dev'
+
+  if (host.endsWith(marker)) {
+    return host.slice(0, -marker.length)
+  }
+
+  return ''
+}
 
 function App() {
-  const codespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim()
+  const envCodespaceName = import.meta.env.VITE_CODESPACE_NAME?.trim() ?? ''
+  const hostCodespaceName = deriveCodespaceNameFromHost()
+  const codespaceName = envCodespaceName || hostCodespaceName
   const apiBaseUrl = codespaceName
     ? `https://${codespaceName}-8000.app.github.dev/api`
     : 'http://localhost:8000/api'
-  const usingFallback = !codespaceName
+  const usingFallback = !envCodespaceName && !hostCodespaceName
 
   return (
     <div className="container py-4">
