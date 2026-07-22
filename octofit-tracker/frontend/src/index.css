@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  background: #f8f9fa;
+}
+
+#root {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 100vh;
+}
